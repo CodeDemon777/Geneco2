@@ -1,0 +1,13 @@
+[
+  {
+    "title": "Breaking Through the Glass Ceiling",
+    "category": "Workplace Experiences",
+    "author": "Jane Doe",
+    "content": "After 10 years in tech, I finally secured a leadership position...",
+    "isAnonymous": false,
+    "supports": 24,
+    "comments": [
+      {"userId": "user1", "text": "Inspiring story!", "timestamp": "2025-03-01T12:00:00Z"}
+    ]
+  }
+]

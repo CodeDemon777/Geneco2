@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advocacy Hub - GenEco</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #5e35b1;
+      --secondary-color: #4fc3f7;
+      --accent-color: #f06292;
+      --dark-color: #2c3e50;
+      --light-color: #ecf0f1;
+      --success-color: #66bb6a;
+      --warning-color: #ffb74d;
+      --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: var(--font-main);
+      line-height: 1.6;
+      color: var(--dark-color);
+      background-color: var(--light-color);
+    }
+    
+    /* Header & Navigation */
+    header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 5%;
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo {
+      height: 50px;
+      margin-right: 15px;
+    }
+    
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+    
+    nav {
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 30px;
+      padding: 5px;
+    }
+    
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+    
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      display: block;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    nav a:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    nav a.active {
+      background-color: white;
+      color: var(--primary-color);
+    }
+    
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+    }
+    
+    .btn-login {
+      background-color: transparent;
+      color: white;
+      border: 2px solid white;
+    }
+    
+    .btn-signup {
+      background-color: white;
+      color: var(--primary-color);
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(to right, rgba(94, 53, 177, 0.9), rgba(79, 195, 247, 0.7)), url('/api/placeholder/1200/600');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      padding: 100px 5%;
+      text-align: center;
+    }
+    
+    .hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 800px;
+      margin: 0 auto 30px;
+    }
+    
+    /* Main Content */
+    main {
+      padding: 60px 5%;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .section-title h2 {
+      font-size: 2.2rem;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .section-title h2::after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: var(--accent-color);
+    }
+    
+    .section-title p {
+      color: #666;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    /* Advocacy Hub Content */
+    .advocacy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    
+    @media (max-width: 768px) {
+      .advocacy-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Story Form */
+    .story-form-container {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      padding: 30px;
+      transition: transform 0.3s ease;
+    }
+    
+    .story-form-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .form-header {
+      margin-bottom: 25px;
+    }
+    
+    .form-header h3 {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(94, 53, 177, 0.2);
+      outline: none;
+    }
+    
+    textarea.form-control {
+      min-height: 150px;
+      resize: vertical;
+    }
+    
+    .form-checkbox {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .form-checkbox input {
+      margin-right: 10px;
+    }
+    
+    .btn-submit {
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    
+    /* Story List */
+    .stories-container {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      padding: 30px;
+    }
+    
+    .stories-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+    
+    .stories-header h3 {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+    }
+    
+    .sort-filter {
+      display: flex;
+      align-items: center;
+    }
+    
+    .sort-filter select {
+      padding: 8px 15px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      background-color: white;
+      font-family: inherit;
+      margin-left: 10px;
+    }
+    
+    .story-card {
+      background-color: var(--light-color);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 0.5s forwards;
+    }
+    
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .story-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+    
+    .story-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .story-author {
+      display: flex;
+      align-items: center;
+    }
+    
+    .author-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--accent-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      margin-right: 10px;
+    }
+    
+    .author-info span {
+      display: block;
+    }
+    
+    .author-name {
+      font-weight: 600;
+    }
+    
+    .post-date {
+      font-size: 0.8rem;
+      color: #666;
+    }
+    
+    .story-title {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: var(--dark-color);
+    }
+    
+    .story-content {
+      color: #444;
+      margin-bottom: 15px;
+    }
+    
+    .story-actions {
+      display: flex;
+      gap: 15px;
+      font-size: 0.9rem;
+    }
+    
+    .story-action {
+      display: flex;
+      align-items: center;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .story-action:hover {
+      color: var(--primary-color);
+    }
+    
+    .story-action i {
+      margin-right: 5px;
+    }
+    
+    .load-more {
+      text-align: center;
+      margin-top: 30px;
+    }
+    
+    .btn-load-more {
+      background-color: transparent;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-load-more:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    /* Call to Action */
+    .cta-section {
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      padding: 60px 5%;
+      margin: 60px 0;
+      color: white;
+      text-align: center;
+      border-radius: 10px;
+    }
+    
+    .cta-section h3 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    
+    .cta-section p {
+      max-width: 700px;
+      margin: 0 auto 30px;
+      font-size: 1.1rem;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    
+    .btn-cta {
+      padding: 12px 25px;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-cta-primary {
+      background-color: white;
+      color: var(--primary-color);
+    }
+    
+    .btn-cta-secondary {
+      background-color: transparent;
+      color: white;
+      border: 2px solid white;
+    }
+    
+    .btn-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    /* Footer */
+    footer {
+      background-color: var(--dark-color);
+      color: white;
+      padding: 60px 5% 20px;
+    }
+    
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    
+    .footer-col h3 {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      position: relative;
+      padding-bottom: 10px;
+    }
+    
+    .footer-col h3::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background-color: var(--accent-color);
+    }
+    
+    .footer-col ul {
+      list-style: none;
+    }
+    
+    .footer-col ul li {
+      margin-bottom: 10px;
+    }
+    
+    .footer-col a {
+      color: #ccc;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .footer-col a:hover {
+      color: white;
+      padding-left: 5px;
+    }
+    
+    .social-icons {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .social-icons a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.1);
+      color: white;
+      transition: all 0.3s ease;
+    }
+    
+    .social-icons a:hover {
+      background-color: var(--accent-color);
+      transform: translateY(-3px);
+    }
+    
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 20px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+    
+    /* Animation Classes */
+    .fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+    
+    .slide-up {
+      animation: slideUp 0.8s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+      from { 
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .mobile-menu-btn {
+        display: block;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+      
+      nav ul {
+        flex-direction: column;
+        width: 100%;
+        display: none;
+      }
+      
+      nav ul.show {
+        display: flex;
+      }
+      
+      .auth-buttons {
+        margin-top: 15px;
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+      }
+      
+      .btn-cta {
+        width: 100%;
+        max-width: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="logo-container">
+        <div class="logo">
+          <i class="fas fa-balance-scale" style="font-size: 2.2rem; color: white;"></i>
+        </div>
+        <h1>GenEco</h1>
+      </div>
+      
+      <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+      </button>
+      
+      <nav>
+        <ul id="mainNav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="pay-equity-tracker.html">Pay Equity Tracker</a></li>
+          <li><a href="economic-opportunity-marketplace.html">Opportunities</a></li>
+          <li><a href="policy-simulator.html">Policy Simulator</a></li>
+          <li><a href="advocacy-hub.html" class="active">Advocacy Hub</a></li>
+        </ul>
+      </nav>
+      
+      <div class="auth-buttons">
+        <button class="btn btn-login" onclick="window.location.href='login.html'">Log In</button>
+        <button class="btn btn-signup" onclick="window.location.href='login.html' ">Sign Up</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h2>Advocacy Hub</h2>
+    <p>Share your experiences, connect with advocates, and join the movement for gender economic equality. Your story matters and can inspire change.</p>
+  </section>
+
+  <main>
+    <div class="container">
+      <div class="section-title">
+        <h2>Community Stories</h2>
+        <p>Real experiences from real people making a difference in gender economics. Share your story and help build awareness about economic inequality.</p>
+      </div>
+      
+      <div class="advocacy-grid">
+        <div class="story-form-container slide-up">
+          <div class="form-header">
+            <h3><i class="fas fa-pen"></i> Share Your Story</h3>
+            <p>Help others understand the importance of gender economic equality by sharing your personal experiences.</p>
+          </div>
+          
+          <form id="storyForm">
+            <div class="form-group">
+              <label for="title">Story Title</label>
+              <input type="text" id="title" name="title" class="form-control" placeholder="Give your story a meaningful title" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="category">Category</label>
+              <select id="category" name="category" class="form-control" required>
+                <option value="">Select a category</option>
+                <option value="workplace">Workplace Experiences</option>
+                <option value="salary">Salary Negotiations</option>
+                <option value="leadership">Leadership Challenges</option>
+                <option value="education">Educational Opportunities</option>
+                <option value="mentorship">Mentorship & Support</option>
+                <option value="policy">Policy Impact</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="story">Your Story</label>
+              <textarea id="story" name="story" class="form-control" placeholder="Share your experience..." rows="5" required></textarea>
+            </div>
+            
+            <div class="form-checkbox">
+              <input type="checkbox" id="anonymous" name="anonymous">
+              <label for="anonymous">Share anonymously</label>
+            </div>
+            
+            <button type="submit" class="btn-submit">
+              <i class="fas fa-paper-plane"></i> Submit Your Story
+            </button>
+          </form>
+        </div>
+        
+        <div class="stories-container">
+          <div class="stories-header">
+            <h3><i class="fas fa-book-open"></i> Community Stories</h3>
+            <div class="sort-filter">
+              <label for="storiesSort">Sort by:</label>
+              <select id="storiesSort">
+                <option value="recent">Most Recent</option>
+                <option value="popular">Most Popular</option>
+                <option value="discussed">Most Discussed</option>
+              </select>
+            </div>
+          </div>
+          
+          <div id="storyList">
+            <!-- Dynamically populated stories -->
+            <div class="story-card">
+              <div class="story-meta">
+                <div class="story-author">
+                  <div class="author-avatar">JD</div>
+                  <div class="author-info">
+                    <span class="author-name">Jane Doe</span>
+                    <span class="post-date">March 1, 2025</span>
+                  </div>
+                </div>
+                <div class="story-category">Workplace Experiences</div>
+              </div>
+              <h4 class="story-title">Breaking Through the Glass Ceiling</h4>
+              <p class="story-content">After 10 years in tech, I finally secured a leadership position. The journey wasn't easy - I had to overcome biases, prove myself repeatedly, and build a strong network of supporters. What finally made the difference was data - I documented my contributions meticulously and presented them during my promotion discussion...</p>
+              <div class="story-actions">
+                <div class="story-action">
+                  <i class="far fa-heart"></i> 24 Supports
+                </div>
+                <div class="story-action">
+                  <i class="far fa-comment"></i> 8 Comments
+                </div>
+                <div class="story-action">
+                  <i class="fas fa-share-alt"></i> Share
+                </div>
+              </div>
+            </div>
+            
+            <div class="story-card">
+              <div class="story-meta">
+                <div class="story-author">
+                  <div class="author-avatar">AN</div>
+                  <div class="author-info">
+                    <span class="author-name">Anonymous</span>
+                    <span class="post-date">February 28, 2025</span>
+                  </div>
+                </div>
+                <div class="story-category">Salary Negotiations</div>
+              </div>
+              <h4 class="story-title">The Unexpected Salary Gap Discovery</h4>
+              <p class="story-content">I accidentally discovered a 22% pay gap between me and my male colleague with the same responsibilities and experience. When I raised this with HR, they cited "negotiation skills" as the reason. I came prepared to my next review with market data from GenEco's Pay Equity Tracker and successfully negotiated a 15% increase...</p>
+              <div class="story-actions">
+                <div class="story-action">
+                  <i class="far fa-heart"></i> 42 Supports
+                </div>
+                <div class="story-action">
+                  <i class="far fa-comment"></i> 15 Comments
+                </div>
+                <div class="story-action">
+                  <i class="fas fa-share-alt"></i> Share
+                </div>
+              </div>
+            </div>
+            
+            <div class="story-card">
+              <div class="story-meta">
+                <div class="story-author">
+                  <div class="author-avatar">RM</div>
+                  <div class="author-info">
+                    <span class="author-name">Robert M.</span>
+                    <span class="post-date">February 25, 2025</span>
+                  </div>
+                </div>
+                <div class="story-category">Policy Impact</div>
+              </div>
+              <h4 class="story-title">How Our Company Changed Its Parental Leave Policy</h4>
+              <p class="story-content">As an HR director, I proposed equal parental leave for all employees regardless of gender. Using GenEco's Policy Simulator, I presented data showing the positive ROI from increased retention and employee satisfaction. Six months after implementation, we've seen a 15% reduction in turnover among parents and higher engagement scores...</p>
+              <div class="story-actions">
+                <div class="story-action">
+                  <i class="far fa-heart"></i> 37 Supports
+                </div>
+                <div class="story-action">
+                  <i class="far fa-comment"></i> 12 Comments
+                </div>
+                <div class="story-action">
+                  <i class="fas fa-share-alt"></i> Share
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="load-more">
+            <button class="btn-load-more">Load More Stories</button>
+          </div>
+        </div>
+      </div>
+      
+      <section class="cta-section">
+        <h3>Take Action Beyond Stories</h3>
+        <p>Join our advocacy initiatives to drive systematic change in economic gender equality. From corporate policy recommendations to legislative advocacy, there are many ways to get involved.</p>
+        <div class="cta-buttons">
+          <button class="btn-cta btn-cta-primary">Join Advocacy Network</button>
+          <button class="btn-cta btn-cta-secondary">View Current Campaigns</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-col">
+        <h3>GenEco</h3>
+        <p>Promoting gender equality in economics through data-driven insights, community engagement, and corporate accountability.</p>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Pay Equity Tracker</a></li>
+          <li><a href="#">Opportunities</a></li>
+          <li><a href="#">Policy Simulator</a></li>
+          <li><a href="#">Advocacy Hub</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="#">Research Reports</a></li>
+          <li><a href="#">Case Studies</a></li>
+          <li><a href="#">Policy Templates</a></li>
+          <li><a href="#">Educational Materials</a></li>
+          <li><a href="#">Webinars & Events</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Contact Us</h3>
+        <ul>
+          <li><i class="fas fa-envelope"></i> info@geneco.org</li>
+          <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+          <li><i class="fas fa-map-marker-alt"></i> 123 Equality Ave, Suite 200<br>San Francisco, CA 94105</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2025 GenEco. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

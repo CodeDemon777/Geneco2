@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Policy Simulator - GenEco</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #5e35b1;
+      --secondary-color: #4fc3f7;
+      --accent-color: #f06292;
+      --dark-color: #2c3e50;
+      --light-color: #ecf0f1;
+      --success-color: #66bb6a;
+      --warning-color: #ffb74d;
+      --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: var(--font-main);
+      line-height: 1.6;
+      color: var(--dark-color);
+      background-color: var(--light-color);
+    }
+    
+    /* Header & Navigation */
+    header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 5%;
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo {
+      height: 50px;
+      margin-right: 15px;
+    }
+    
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+    
+    nav {
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 30px;
+      padding: 5px;
+    }
+    
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+    
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      display: block;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    nav a:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    nav a.active {
+      background-color: white;
+      color: var(--primary-color);
+    }
+    
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .btn {
+      padding: 8px 20px;
+      border-radius: 20px;
+      border: none;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-login {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+    
+    .btn-login:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .btn-signup {
+      background-color: white;
+      color: var(--primary-color);
+    }
+    
+    .btn-signup:hover {
+      background-color: rgba(255, 255, 255, 0.9);
+      transform: translateY(-2px);
+    }
+    
+    /* Main Content */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    
+    .page-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .page-title h2 {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+    
+    .page-title p {
+      font-size: 1.2rem;
+      color: var(--dark-color);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    /* Policy Simulator */
+    .simulator-container {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+    
+    @media (max-width: 992px) {
+      .simulator-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .controls-panel {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .panel-title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .panel-title i {
+      background-color: rgba(94, 53, 177, 0.1);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      color: var(--primary-color);
+      font-size: 1.2rem;
+    }
+    
+    .panel-title h3 {
+      font-size: 1.5rem;
+      color: var(--dark-color);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark-color);
+    }
+    
+    .select-wrapper {
+      position: relative;
+    }
+    
+    .select-wrapper::after {
+      content: '\f107';
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--primary-color);
+    }
+    
+    select, input[type="number"], input[type="range"] {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: var(--dark-color);
+      transition: all 0.3s ease;
+      appearance: none;
+      background-color: white;
+    }
+    
+    select:focus, input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(94, 53, 177, 0.1);
+    }
+    
+    .range-container {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .range-info {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
+    input[type="range"] {
+      height: 10px;
+      -webkit-appearance: none;
+      margin: 10px 0;
+      border: none;
+      background: #ddd;
+      border-radius: 5px;
+      padding: 0;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary-color);
+      cursor: pointer;
+    }
+    
+    .value-display {
+      background: var(--primary-color);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-weight: 500;
+      margin-left: 10px;
+    }
+    
+    button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--primary-color);
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+    
+    button:hover {
+      background-color: #4527a0;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(94, 53, 177, 0.2);
+    }
+    
+    .tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .tag {
+      background-color: rgba(94, 53, 177, 0.1);
+      color: var(--primary-color);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .tag i {
+      margin-right: 5px;
+    }
+    
+    .tag:hover, .tag.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    /* Results Section */
+    .results-panel {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 300px;
+      margin-bottom: 20px;
+    }
+    
+    .metrics-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 30px;
+    }
+    
+    .metric-card {
+      background-color: var(--light-color);
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    .metric-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .metric-card .icon {
+      width: 50px;
+      height: 50px;
+      background-color: rgba(94, 53, 177, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+      color: var(--primary-color);
+      font-size: 1.3rem;
+    }
+    
+    .metric-card h4 {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 5px;
+    }
+    
+    .metric-card p {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+    
+    .metric-card.positive p {
+      color: var(--success-color);
+    }
+    
+    .metric-card.negative p {
+      color: var(--accent-color);
+    }
+    
+    /* Comparison Section */
+    .comparison-section {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      margin-top: 30px;
+    }
+    
+    .comparison-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .comparison-header h3 {
+      font-size: 1.5rem;
+      color: var(--dark-color);
+    }
+    
+    .comparison-controls {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .comparison-controls button {
+      width: auto;
+      padding: 8px 15px;
+      margin: 0;
+    }
+    
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .comparison-table th, .comparison-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .comparison-table th {
+      background-color: rgba(94, 53, 177, 0.05);
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+    
+    .comparison-table td {
+      color: #666;
+    }
+    
+    .comparison-table tr:hover {
+      background-color: rgba(79, 195, 247, 0.05);
+    }
+    
+    .trend-up {
+      color: var(--success-color);
+    }
+    
+    .trend-down {
+      color: var(--accent-color);
+    }
+    
+    /* Footer */
+    footer {
+      background-color: var(--dark-color);
+      color: white;
+      padding: 20px 5%;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+      from { 
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.8s ease-in-out;
+    }
+    
+    .slide-up {
+      animation: slideUp 0.8s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="logo-container">
+        <div class="logo">
+          <i class="fas fa-balance-scale" style="font-size: 2.2rem; color: white;"></i>
+        </div>
+        <h1>GenEco</h1>
+      </div>
+      
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="pay-equity-tracker.html">Pay Equity Tracker</a></li>
+          <li><a href="economic-opportunity-marketplace.html">Opportunities</a></li>
+          <li><a href="policy-simulator.html" class="active">Policy Simulator</a></li>
+          <li><a href="advocacy-hub.html">Advocacy Hub</a></li>
+        </ul>
+      </nav>
+      
+      <div class="auth-buttons">
+        <button class="btn btn-login" onclick="window.location.href='login.html'">Log In</button>
+        <button class="btn btn-signup" onclick="window.location.href='login.html' ">Sign Up</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-title fade-in">
+      <h2>Policy Simulator</h2>
+      <p>Model the economic impacts of gender-focused policies and practices on businesses and communities</p>
+    </div>
+    
+    <div class="simulator-container slide-up">
+      <div class="controls-panel">
+        <div class="panel-title">
+          <i class="fas fa-sliders-h"></i>
+          <h3>Policy Controls</h3>
+        </div>
+        
+        <form id="policyForm">
+          <div class="form-group">
+            <label for="policyType">Policy Type:</label>
+            <div class="select-wrapper">
+              <select id="policyType" name="policyType">
+                <option value="equal-pay">Equal Pay Legislation</option>
+                <option value="parental-leave">Parental Leave Benefits</option>
+                <option value="flexible-work">Flexible Work Arrangements</option>
+                <option value="childcare">Childcare Subsidies</option>
+                <option value="mentorship">Women's Leadership Development</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Policy Focus:</label>
+            <div class="tag-container">
+              <div class="tag active"><i class="fas fa-building"></i> Corporate</div>
+              <div class="tag"><i class="fas fa-landmark"></i> Government</div>
+              <div class="tag"><i class="fas fa-users"></i> Community</div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="investment">Investment Amount:</label>
+            <input type="number" id="investment" name="investment" min="10000" max="10000000" value="500000" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="timeframe">Implementation Timeframe (Years):</label>
+            <div class="range-container">
+              <input type="range" id="timeframe" name="timeframe" min="1" max="10" value="5">
+              <div class="range-info">
+                <span>1 year</span>
+                <span id="timeframeValue">5 years</span>
+                <span>10 years</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="intensity">Implementation Intensity:</label>
+            <div class="select-wrapper">
+              <select id="intensity" name="intensity">
+                <option value="gradual">Gradual Implementation</option>
+                <option value="moderate" selected>Moderate Implementation</option>
+                <option value="aggressive">Aggressive Implementation</option>
+              </select>
+            </div>
+          </div>
+          
+          <button type="submit" id="simulateBtn">
+            <i class="fas fa-play-circle"></i> Run Simulation
+          </button>
+        </form>
+      </div>
+      
+      <div class="results-panel">
+        <div class="panel-title">
+          <i class="fas fa-chart-line"></i>
+          <h3>Simulation Results</h3>
+        </div>
+        
+        <div class="chart-container">
+          <canvas id="policyChart"></canvas>
+        </div>
+        
+        <div class="metrics-container">
+          <div class="metric-card positive">
+            <div class="icon">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <h4>ROI</h4>
+            <p>+215%</p>
+          </div>
+          
+          <div class="metric-card positive">
+            <div class="icon">
+              <i class="fas fa-venus"></i>
+            </div>
+            <h4>Women's Earnings</h4>
+            <p>+24.3%</p>
+          </div>
+          
+          <div class="metric-card">
+            <div class="icon">
+              <i class="fas fa-briefcase"></i>
+            </div>
+            <h4>Workforce Participation</h4>
+            <p>+18.7%</p>
+          </div>
+          
+          <div class="metric-card positive">
+            <div class="icon">
+              <i class="fas fa-chart-pie"></i>
+            </div>
+            <h4>GDP Impact</h4>
+            <p>+1.2%</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="comparison-section slide-up" style="animation-delay: 0.2s;">
+      <div class="comparison-header">
+        <h3>Policy Comparison</h3>
+        <div class="comparison-controls">
+          <button id="saveBtn"><i class="fas fa-save"></i> Save Results</button>
+          <button id="compareBtn"><i class="fas fa-exchange-alt"></i> Compare</button>
+        </div>
+      </div>
+      
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>No Policy</th>
+            <th>Equal Pay</th>
+            <th>Difference</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Average Women's Earnings</td>
+            <td>$52,400</td>
+            <td>$65,100</td>
+            <td class="trend-up">+$12,700 (24.3%)</td>
+          </tr>
+          <tr>
+            <td>Pay Gap</td>
+            <td>19.2%</td>
+            <td>7.8%</td>
+            <td class="trend-up">-11.4%</td>
+          </tr>
+          <tr>
+            <td>Workforce Participation</td>
+            <td>68.2%</td>
+            <td>80.9%</td>
+            <td class="trend-up">+12.7%</td>
+          </tr>
+          <tr>
+            <td>Women in Leadership</td>
+            <td>22.7%</td>
+            <td>31.9%</td>
+            <td class="trend-up">+9.2%</td>
+          </tr>
+          <tr>
+            <td>Company Productivity</td>
+            <td>100 (index)</td>
+            <td>112.6 (index)</td>
+            <td class="trend-up">+12.6%</td>
+          </tr>
+          <tr>
+            <td>Implementation Costs</td>
+            <td>$0</td>
+            <td>$500,000</td>
+            <td class="trend-down">+$500,000</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 GenEco. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Toggle policy focus tags
+    document.querySelectorAll('.tag').forEach(tag => {
+      tag.addEventListener('click', function() {
+        document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    
+    // Update timeframe value
+    const timeframeSlider = document.getElementById('timeframe');
+    const timeframeValue = document.getElementById('timeframeValue');
+    
+    timeframeSlider.addEventListener('input', function() {
+      timeframeValue.textContent = `${this.value} years`;
+    });
+    
+    // Initialize Chart
+    const ctx = document.getElementById('policyChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
+        datasets: [
+          {
+            label: 'With Policy',
+            data: [105, 115, 129, 148, 175],
+            borderColor: '#5e35b1',
+            backgroundColor: 'rgba(94, 53, 177, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.3
+          },
+          {
+            label: 'Without Policy',
+            data: [100, 103, 108, 112, 118],
+            borderColor: '#f06292',
+            backgroundColor: 'rgba(240, 98, 146, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          tooltip: {
+            mode: 'index',
+            intersect: false,
+          }
+        },
+        scales: {
+          y: {
+            title: {
+              display: true,
+              text: 'Economic Impact (Index)'
+            },
+            suggestedMin: 90
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Time Period'
+            }
+          }
+        }
+      }
+    });
+    
+    // Form submission
+    document.getElementById('policyForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Simulate loading
+      document.getElementById('simulateBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Simulating...';
+      
+      // In a real app, you would fetch data here
+      setTimeout(() => {
+        // Update chart with "new" data
+        const policyType = document.getElementById('policyType').value;
+        const investment = parseInt(document.getElementById('investment').value);
+        const timeframe = parseInt(document.getElementById('timeframe').value);
+        const intensity = document.getElementById('intensity').value;
+        
+        // Create some dynamic data based on inputs
+        const withPolicy = [];
+        const withoutPolicy = [];
+        const labels = [];
+        
+        const intensityMultiplier = 
+          intensity === 'gradual' ? 1.1 : 
+          intensity === 'moderate' ? 1.3 : 1.5;
+        
+        const investmentFactor = Math.log10(investment / 10000) * 0.2;
+        
+        for (let i = 0; i <= timeframe; i++) {
+          labels.push(`Year ${i}`);
+          
+          // Base growth + investment effect + compounding
+          const policyGrowth = 100 * Math.pow(1 + (0.05 + investmentFactor) * intensityMultiplier, i);
+          withPolicy.push(Math.round(policyGrowth));
+          
+          // Base growth only
+          const baseGrowth = 100 * Math.pow(1.03, i);
+          withoutPolicy.push(Math.round(baseGrowth));
+        }
+        
+        // Update chart
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = withPolicy;
+        chart.data.datasets[1].data = withoutPolicy;
+        chart.update();
+        
+        // Update metrics
+        const finalGrowth = withPolicy[withPolicy.length - 1] - 100;
+        const baseGrowth = withoutPolicy[withoutPolicy.length - 1] - 100;
+        const difference = finalGrowth - baseGrowth;
+        
+        // Update comparison table
+        document.querySelector('table tbody').innerHTML = `
+          <tr>
+            <td>Average Women's Earnings</td>
+            <td>$52,400</td>
+            <td>$${Math.round(52400 * (1 + finalGrowth / 100)).toLocaleString()}</td>
+            <td class="trend-up">+$${Math.round(52400 * (finalGrowth / 100)).toLocaleString()} (${finalGrowth.toFixed(1)}%)</td>
+          </tr>
+          <tr>
+            <td>Pay Gap</td>
+            <td>19.2%</td>
+            <td>${Math.max(19.2 - finalGrowth/3, 2).toFixed(1)}%</td>
+            <td class="trend-up">-${(finalGrowth/3).toFixed(1)}%</td>
+          </tr>
+          <tr>
+            <td>Workforce Participation</td>
+            <td>68.2%</td>
+            <td>${Math.min(68.2 + finalGrowth/4, 95).toFixed(1)}%</td>
+            <td class="trend-up">+${(finalGrowth/4).toFixed(1)}%</td>
+          </tr>
+          <tr>
+            <td>Women in Leadership</td>
+            <td>22.7%</td>
+            <td>${Math.min(22.7 + finalGrowth/5, 50).toFixed(1)}%</td>
+            <td class="trend-up">+${(finalGrowth/5).toFixed(1)}%</td>
+          </tr>
+          <tr>
+            <td>Company Productivity</td>
+            <td>100 (index)</td>
+            <td>${(100 + finalGrowth/2).toFixed(1)} (index)</td>
+            <td class="trend-up">+${(finalGrowth/2).toFixed(1)}%</td>
+          </tr>
+          <tr>
+            <td>Implementation Costs</td>
+            <td>$0</td>
+            <td>$${investment.toLocaleString()}</td>
+            <td class="trend-down">+$${investment.toLocaleString()}</td>
+          </tr>
+        `;
+        
+        // Update metric cards
+        document.querySelector('.metrics-container').innerHTML = `
+          <div class="metric-card positive">
+            <div class="icon">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <h4>ROI</h4>
+            <p>+${Math.round((finalGrowth * 52400 / 100) / investment * 100)}%</p>
+          </div>
+          
+          <div class="metric-card positive">
+            <div class="icon">
+              <i class="fas fa-venus"></i>
+            </div>
+            <h4>Women's Earnings</h4>
+            <p>+${finalGrowth.toFixed(1)}%</p>
+          </div>
+          
+          <div class="metric-card">
+            <div class="icon">
+              <i class="fas fa-briefcase"></i>
+            </div>
+            <h4>Workforce Participation</h4>
+            <p>+${(finalGrowth/4).toFixed(1)}%</p>
+          </div>
+          
+          <div class="metric-card positive">
+            <div class="icon">
+              <i class="fas fa-chart-pie"></i>
+            </div>
+            <h4>GDP Impact</h4>
+            <p>+${(finalGrowth/20).toFixed(1)}%</p>
+          </div>
+        `;
+        
+        // Reset button
+        document.getElementById('simulateBtn').innerHTML = '<i class="fas fa-play-circle"></i> Run Simulation';
+        
+      }, 1500);
+    });
+    
+    // Button actions
+    document.getElementById('saveBtn').addEventListener('click', function() {
+      alert('Results saved! In a real application, this would save the current simulation for later reference.');
+    });
+    
+    document.getElementById('compareBtn').addEventListener('click', function() {
+      alert('Compare feature activated! In a real application, this would allow you to select multiple policies to compare side-by-side.');
+    });
+  </script>
+</body>
+</html>

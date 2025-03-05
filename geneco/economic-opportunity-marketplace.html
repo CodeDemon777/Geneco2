@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Economic Opportunity Marketplace - GenEco</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #5e35b1;
+      --secondary-color: #4fc3f7;
+      --accent-color: #f06292;
+      --dark-color: #2c3e50;
+      --light-color: #ecf0f1;
+      --success-color: #66bb6a;
+      --warning-color: #ffb74d;
+      --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: var(--font-main);
+      line-height: 1.6;
+      color: var(--dark-color);
+      background-color: var(--light-color);
+    }
+    
+    /* Header & Navigation */
+    header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 5%;
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo {
+      height: 50px;
+      margin-right: 15px;
+    }
+    
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+    
+    nav {
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 30px;
+      padding: 5px;
+    }
+    
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+    
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      display: block;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    nav a:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    nav a.active {
+      background-color: white;
+      color: var(--primary-color);
+    }
+    
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+    }
+    
+    .btn-login {
+      background-color: transparent;
+      color: white;
+      border: 2px solid white;
+    }
+    
+    .btn-signup {
+      background-color: white;
+      color: var(--primary-color);
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* Main Content */
+    main {
+      padding: 40px 5%;
+    }
+    
+    .page-title {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    
+    .page-title h2 {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+    
+    .page-title p {
+      font-size: 1.2rem;
+      color: var(--dark-color);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    /* Search and Filter Section */
+    .search-section {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      margin-bottom: 40px;
+    }
+    
+    .search-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .search-input {
+      flex: 1;
+      padding: 12px 20px;
+      border-radius: 30px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(94, 53, 177, 0.2);
+    }
+    
+    .search-button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      padding: 12px 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .search-button:hover {
+      background-color: #4527a0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .filters-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    .filter-group {
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .filter-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .filter-group select {
+      width: 100%;
+      padding: 10px 15px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      background-color: white;
+    }
+    
+    /* Opportunities List */
+    .opportunities-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    
+    .opportunity-card {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+    }
+    
+    .opportunity-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .opportunity-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: var(--accent-color);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    
+    .card-header {
+      position: relative;
+      height: 120px;
+      background-color: var(--secondary-color);
+      padding: 20px;
+      color: white;
+    }
+    
+    .opportunity-type {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: var(--accent-color);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .company-logo {
+      width: 50px;
+      height: 50px;
+      background-color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .card-body {
+      padding: 20px;
+    }
+    
+    .card-title {
+      font-size: 1.3rem;
+      margin-bottom: 5px;
+      color: var(--dark-color);
+    }
+    
+    .company-name {
+      color: #666;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .card-details {
+      margin-bottom: 15px;
+    }
+    
+    .detail-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+      color: #555;
+    }
+    
+    .detail-icon {
+      color: var(--primary-color);
+      width: 20px;
+    }
+    
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 20px;
+      background-color: #f8f9fa;
+      border-top: 1px solid #eee;
+    }
+    
+    .post-date {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    .apply-button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .apply-button:hover {
+      background-color: #4527a0;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .load-more {
+      display: block;
+      width: 200px;
+      margin: 40px auto 0;
+      padding: 12px 20px;
+      background-color: transparent;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+    
+    .load-more:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    /* Footer */
+    footer {
+      background-color: var(--dark-color);
+      color: white;
+      padding: 60px 5% 20px;
+      margin-top: 80px;
+    }
+    
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    
+    .footer-col h3 {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      position: relative;
+      padding-bottom: 10px;
+    }
+    
+    .footer-col h3::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background-color: var(--accent-color);
+    }
+    
+    .footer-col ul {
+      list-style: none;
+    }
+    
+    .footer-col ul li {
+      margin-bottom: 10px;
+    }
+    
+    .footer-col a {
+      color: #ccc;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .footer-col a:hover {
+      color: white;
+      padding-left: 5px;
+    }
+    
+    .social-icons {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .social-icons a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.1);
+      color: white;
+      transition: all 0.3s ease;
+    }
+    
+    .social-icons a:hover {
+      background-color: var(--accent-color);
+      transform: translateY(-3px);
+    }
+    
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 20px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+    
+    /* Animation Classes */
+    .fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .slide-up {
+      animation: slideUp 0.8s ease-in-out;
+    }
+    
+    @keyframes slideUp {
+      from { 
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .search-container {
+        flex-direction: column;
+      }
+      
+      .filters-container {
+        flex-direction: column;
+      }
+      
+      .filter-group {
+        width: 100%;
+      }
+      
+      .card-footer {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+      }
+      
+      .apply-button {
+        width: 100%;
+        text-align: center;
+      }
+      
+      .opportunity-type {
+        top: 10px;
+        right: 10px;
+        padding: 3px 8px;
+        font-size: 0.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="logo-container">
+        <div class="logo">
+          <i class="fas fa-balance-scale" style="font-size: 2.2rem; color: white;"></i>
+        </div>
+        <h1>GenEco</h1>
+      </div>
+      
+      <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+      </button>
+      
+      <nav>
+        <ul id="mainNav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="pay-equity-tracker.html">Pay Equity Tracker</a></li>
+          <li><a href="economic-opportunity-marketplace.html" class="active">Opportunities</a></li>
+          <li><a href="policy-simulator.html">Policy Simulator</a></li>
+          <li><a href="advocacy-hub.html">Advocacy Hub</a></li>
+        </ul>
+      </nav>
+      
+      <div class="auth-buttons">
+        <button class="btn btn-login" onclick="window.location.href='login.html'">Log In</button>
+        <button class="btn btn-signup" onclick="window.location.href='login.html' ">Sign Up</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-title fade-in">
+      <h2>Economic Opportunity Marketplace</h2>
+      <p>Discover jobs, grants, mentorships, and educational resources designed to promote gender equality in economics.</p>
+    </div>
+    
+    <section class="search-section slide-up">
+      <div class="search-container">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search by keyword, company, or location...">
+        <button class="search-button" id="searchButton">
+          <i class="fas fa-search"></i> Search
+        </button>
+      </div>
+      
+      <div class="filters-container">
+        <div class="filter-group">
+          <label for="opportunityType">Opportunity Type</label>
+          <select id="opportunityType">
+            <option value="">All Types</option>
+            <option value="job">Jobs</option>
+            <option value="grant">Grants</option>
+            <option value="mentorship">Mentorships</option>
+            <option value="education">Educational Resources</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="industry">Industry</label>
+          <select id="industry">
+            <option value="">All Industries</option>
+            <option value="tech">Technology</option>
+            <option value="finance">Finance</option>
+            <option value="healthcare">Healthcare</option>
+            <option value="education">Education</option>
+            <option value="government">Government</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="location">Location</label>
+          <select id="location">
+            <option value="">All Locations</option>
+            <option value="remote">Remote</option>
+            <option value="us">United States</option>
+            <option value="europe">Europe</option>
+            <option value="asia">Asia</option>
+            <option value="africa">Africa</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="sortBy">Sort By</label>
+          <select id="sortBy">
+            <option value="newest">Newest First</option>
+            <option value="relevant">Most Relevant</option>
+            <option value="deadline">Application Deadline</option>
+          </select>
+        </div>
+      </div>
+    </section>
+    
+    <section class="opportunities-section">
+      <div class="opportunities-container fade-in" id="opportunityList">
+        <!-- Sample Opportunity Card 1 -->
+        <div class="opportunity-card slide-up" style="animation-delay: 0.1s;">
+          <div class="card-header">
+            <span class="opportunity-type">Job</span>
+            <div class="company-logo">
+              <i class="fas fa-laptop-code"></i>
+            </div>
+            <h3>TechForward Inc.</h3>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Senior Data Scientist</h3>
+            <p class="company-name">
+              <i class="fas fa-building"></i> TechForward Inc.
+            </p>
+            <div class="card-details">
+              <div class="detail-item">
+                <i class="fas fa-map-marker-alt detail-icon"></i>
+                <span>San Francisco, CA (Hybrid)</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-dollar-sign detail-icon"></i>
+                <span>$120,000 - $150,000</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-clock detail-icon"></i>
+                <span>Full-time</span>
+              </div>
+            </div>
+            <p>Lead data science initiatives focused on addressing gender disparities in tech hiring and promotion. 5+ years experience required.</p>
+          </div>
+          <div class="card-footer">
+            <span class="post-date"><i class="far fa-calendar-alt"></i> Posted 2 days ago</span>
+            <button class="apply-button">Apply Now</button>
+          </div>
+        </div>
+        
+        <!-- Sample Opportunity Card 2 -->
+        <div class="opportunity-card slide-up" style="animation-delay: 0.2s;">
+          <div class="card-header" style="background-color: #9c27b0;">
+            <span class="opportunity-type">Grant</span>
+            <div class="company-logo">
+              <i class="fas fa-hand-holding-usd"></i>
+            </div>
+            <h3>Women's Economic Fund</h3>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Women Entrepreneurs Grant</h3>
+            <p class="company-name">
+              <i class="fas fa-landmark"></i> Women's Economic Fund
+            </p>
+            <div class="card-details">
+              <div class="detail-item">
+                <i class="fas fa-globe-americas detail-icon"></i>
+                <span>Nationwide</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-dollar-sign detail-icon"></i>
+                <span>Up to $50,000</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-hourglass-end detail-icon"></i>
+                <span>Deadline: April 15, 2025</span>
+              </div>
+            </div>
+            <p>Funding for women-led startups addressing economic inequality. Priority given to underrepresented founders.</p>
+          </div>
+          <div class="card-footer">
+            <span class="post-date"><i class="far fa-calendar-alt"></i> Posted 1 week ago</span>
+            <button class="apply-button">Apply Now</button>
+          </div>
+        </div>
+        
+        <!-- Sample Opportunity Card 3 -->
+        <div class="opportunity-card slide-up" style="animation-delay: 0.3s;">
+          <div class="card-header" style="background-color: #00bcd4;">
+            <span class="opportunity-type">Mentorship</span>
+            <div class="company-logo">
+              <i class="fas fa-users"></i>
+            </div>
+            <h3>Equity Champions Network</h3>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Executive Leadership Mentorship</h3>
+            <p class="company-name">
+              <i class="fas fa-network-wired"></i> Equity Champions Network
+            </p>
+            <div class="card-details">
+              <div class="detail-item">
+                <i class="fas fa-map-marker-alt detail-icon"></i>
+                <span>Virtual</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-calendar-week detail-icon"></i>
+                <span>6-month program</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-hourglass-end detail-icon"></i>
+                <span>Deadline: March 30, 2025</span>
+              </div>
+            </div>
+            <p>Connect with C-Suite executives from Fortune 500 companies for personalized guidance on breaking glass ceilings.</p>
+          </div>
+          <div class="card-footer">
+            <span class="post-date"><i class="far fa-calendar-alt"></i> Posted 3 days ago</span>
+            <button class="apply-button">Apply Now</button>
+          </div>
+        </div>
+        
+        <!-- Sample Opportunity Card 4 -->
+        <div class="opportunity-card slide-up" style="animation-delay: 0.4s;">
+          <div class="card-header" style="background-color: #ff9800;">
+            <span class="opportunity-type">Education</span>
+            <div class="company-logo">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h3>Future Finance Academy</h3>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Financial Leadership Certificate</h3>
+            <p class="company-name">
+              <i class="fas fa-university"></i> Future Finance Academy
+            </p>
+            <div class="card-details">
+              <div class="detail-item">
+                <i class="fas fa-laptop detail-icon"></i>
+                <span>Online (Self-paced)</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-calendar-week detail-icon"></i>
+                <span>12-week program</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-tag detail-icon"></i>
+                <span>100% Scholarship Available</span>
+              </div>
+            </div>
+            <p>Comprehensive training in financial leadership, investment strategy, and negotiation skills tailored for women in finance.</p>
+          </div>
+          <div class="card-footer">
+            <span class="post-date"><i class="far fa-calendar-alt"></i> Posted 5 days ago</span>
+            <button class="apply-button">Apply Now</button>
+          </div>
+        </div>
+        
+        <!-- Sample Opportunity Card 5 -->
+        <div class="opportunity-card slide-up" style="animation-delay: 0.5s;">
+          <div class="card-header" style="background-color: #4caf50;">
+            <span class="opportunity-type">Job</span>
+            <div class="company-logo">
+              <i class="fas fa-heartbeat"></i>
+            </div>
+            <h3>HealthEquity Solutions</h3>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Director of Compensation Strategy</h3>
+            <p class="company-name">
+              <i class="fas fa-building"></i> HealthEquity Solutions
+            </p>
+            <div class="card-details">
+              <div class="detail-item">
+                <i class="fas fa-map-marker-alt detail-icon"></i>
+                <span>Boston, MA</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-dollar-sign detail-icon"></i>
+                <span>$140,000 - $170,000</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-clock detail-icon"></i>
+                <span>Full-time</span>
+              </div>
+            </div>
+            <p>Lead the development of equitable compensation strategies across one of the largest healthcare networks in the country.</p>
+          </div>
+          <div class="card-footer">
+            <span class="post-date"><i class="far fa-calendar-alt"></i> Posted 1 day ago</span>
+            <button class="apply-button">Apply Now</button>
+          </div>
+        </div>
+        
+        <!-- Sample Opportunity Card 6 -->
+        <div class="opportunity-card slide-up" style="animation-delay: 0.6s;">
+          <div class="card-header" style="background-color: #673ab7;">
+            <span class="opportunity-type">Grant</span>
+            <div class="company-logo">
+              <i class="fas fa-seedling"></i>
+            </div>
+            <h3>Economic Growth Initiative</h3>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Women in Rural Economics Grant</h3>
+            <p class="company-name">
+              <i class="fas fa-landmark"></i> Economic Growth Initiative
+            </p>
+            <div class="card-details">
+              <div class="detail-item">
+                <i class="fas fa-globe-americas detail-icon"></i>
+                <span>Rural Communities</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-dollar-sign detail-icon"></i>
+                <span>$5,000 - $25,000</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-hourglass-end detail-icon"></i>
+                <span>Deadline: May 1, 2025</span>
+              </div>
+            </div>
+            <p>Supporting women-led initiatives that strengthen economic opportunities in rural and agricultural communities.</p>
+          </div>
+          <div class="card-footer">
+            <span class="post-date"><i class="far fa-calendar-alt"></i> Posted 6 days ago</span>
+            <button class="apply-button">Apply Now</button>
+          </div>
+        </div>
+      </div>
+      
+      <button class="load-more" id="loadMoreBtn">Load More</button>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-col">
+        <h3>GenEco</h3>
+        <p>Promoting gender equality in economics through data-driven insights, community engagement, and corporate accountability.</p>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="pay-equity-tracker.html">Pay Equity Tracker</a></li>
+          <li><a href="economic-opportunity-marketplace.html">Opportunities</a></li>
+          <li><a href="policy-simulator.html">Policy Simulator</a></li>
+          <li><a href="advocacy-hub.html">Advocacy Hub</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="#">Research Reports</a></li>
+          <li><a href="#">Case Studies</a></li>
+          <li><a href="#">Policy Templates</a></li>
+          <li><a href="#">Educational Materials</a></li>
+          <li><a href="#">Webinars & Events</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Contact Us</h3>
+        <ul>
+          <li><i class="fas fa-envelope"></i> info@geneco.org</li>
+          <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+          <li><i class="fas fa-map-marker-alt"></i> 123 Equality Ave, Suite 200<br>San Francisco, CA 94105</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2025 GenEco. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
